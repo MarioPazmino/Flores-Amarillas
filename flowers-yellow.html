@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jardín Animado</title>
+    <style>
+        :root {
+            --color-cielo: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            --color-petalos: #FFF9C4;
+            --color-tallo: #689F38;
+            --color-centro: #FFB300;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: var(--color-cielo);
+            height: 100vh;
+            position: relative;
+        }
+
+        .garden {
+            position: relative;
+            width: 100%;
+            height: 85%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* Base de césped */
+        .grass {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 15%;
+            background: linear-gradient(to top, #7CB342, #9CCC65);
+            box-shadow: 0 -4px 15px rgba(124, 179, 66, 0.3);
+        }
+
+        .flower {
+            position: absolute;
+            transform-origin: bottom center;
+            animation: sway 4s ease-in-out infinite alternate;
+            filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .flower:hover {
+            transform: scale(1.05) rotate(2deg);
+            z-index: 10;
+        }
+
+        .stem {
+            width: 10px;
+            height: 120px;
+            background: var(--color-tallo);
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            border-radius: 4px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flower-center {
+            width: 35px;
+            height: 35px;
+            background: var(--color-centro);
+            border-radius: 50%;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 
+                inset 0 0 12px rgba(0, 0, 0, 0.2),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .petals {
+            position: absolute;
+            top: -30px;
+            left: 300%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 90px;
+            z-index: 2;
+            animation: bloom 6s ease-in-out infinite alternate;
+        }
+
+        .petal {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: var(--color-petalos);
+            border-radius: 50% 30%;
+            transform-origin: center center;
+            box-shadow: 
+                1px 2px 4px rgba(0, 0, 0, 0.15),
+                inset 0 -2px 4px rgba(255, 235, 59, 0.3);
+        }
+
+        /* Posicionamiento de pétalos mejorado */
+        .petal:nth-child(odd) {
+            transform: rotate(22.5deg);
+            border-radius: 30% 50%;
+        }
+
+        .petal:nth-child(1) { transform: translate(30px, 0) rotate(0deg); }
+        .petal:nth-child(2) { transform: translate(21px, 21px) rotate(45deg); }
+        .petal:nth-child(3) { transform: translate(0, 30px) rotate(90deg); }
+        .petal:nth-child(4) { transform: translate(-21px, 21px) rotate(135deg); }
+        .petal:nth-child(5) { transform: translate(-30px, 0) rotate(180deg); }
+        .petal:nth-child(6) { transform: translate(-21px, -21px) rotate(225deg); }
+        .petal:nth-child(7) { transform: translate(0, -30px) rotate(270deg); }
+        .petal:nth-child(8) { transform: translate(21px, -21px) rotate(315deg); }
+
+        .leaf {
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            background: var(--color-tallo);
+            border-radius: 50% 20% 50% 30%;
+            transform: rotate(45deg);
+            top: 50px;
+            right: -20px;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.1),
+                1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaf:nth-child(2) {
+            transform: rotate(135deg);
+            left: -20px;
+            right: auto;
+            border-radius: 20% 50% 30% 50%;
+        }
+
+        @keyframes bloom {
+            0% { transform: translateX(-50%) scale(0.8) rotate(-5deg); }
+            50% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+            100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+        }
+
+        @keyframes sway {
+            0% { transform: rotate(-7deg); }
+            100% { transform: rotate(7deg); }
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 15px;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #689F38;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #558B2F;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Efecto de viento en el jardín */
+        @keyframes wind {
+            0%, 100% { transform: skewX(0deg); }
+            50% { transform: skewX(3deg); }
+        }
+
+        .garden {
+            animation: wind 8s ease-in-out infinite;
+        }
+
+
+        
+
+
+
+
+
+
+
+
+        .rain-drop {
+            position: fixed;
+            font-family: 'Arial', sans-serif;
+            font-size: 30px;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            animation: fall 3s linear forwards;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grass"></div>
+    <div class="garden" id="garden"></div>
+    
+    <div id="controls">
+        <button id="addFlower">🌸 Añadir Flor</button>
+        <button id="resetGarden">♻️ Reiniciar</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const garden = document.getElementById('garden');
+            const addFlowerBtn = document.getElementById('addFlower');
+            const resetGardenBtn = document.getElementById('resetGarden');
+            
+            // Crear algunas flores iniciales
+            for (let i = 0; i < 5; i++) {
+                createFlower();
+            }
+            
+            // Añadir evento para añadir flores
+            addFlowerBtn.addEventListener('click', createFlower);
+            
+            // Añadir evento para reiniciar el jardín
+            resetGardenBtn.addEventListener('click', function() {
+                garden.innerHTML = '';
+                for (let i = 0; i < 5; i++) {
+                    createFlower();
+                }
+            });
+            
+            // También permite hacer clic en el jardín para añadir flores
+            garden.addEventListener('click', function(event) {
+                createFlowerAt(event.clientX, event.clientY);
+            });
+            
+            function createFlower() {
+                const x = Math.random() * (window.innerWidth - 100);
+                const y = Math.random() * (window.innerHeight - 200);
+                createFlowerAt(x, y);
+            }
+            
+            function createFlowerAt(x, y) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.style.left = x + 'px';
+                flower.style.top = y + 'px';
+                
+                // Añadir variabilidad a las flores
+                const scale = 0.7 + Math.random() * 0.6;
+                flower.style.transform = `scale(${scale})`;
+                
+                // Crear tallo
+                const stem = document.createElement('div');
+                stem.className = 'stem';
+                
+                // Crear hojas
+                const leaf1 = document.createElement('div');
+                leaf1.className = 'leaf';
+                const leaf2 = document.createElement('div');
+                leaf2.className = 'leaf';
+                
+                stem.appendChild(leaf1);
+                stem.appendChild(leaf2);
+                
+                // Crear pétalos
+                const petalsContainer = document.createElement('div');
+                petalsContainer.className = 'petals';
+                
+                for (let i = 0; i < 8; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    
+                    // Variar ligeramente el color de los pétalos
+                    const yellowVariation = Math.floor(Math.random() * 30);
+                    petal.style.backgroundColor = `rgb(255, ${235 - yellowVariation}, ${59 - yellowVariation})`;
+                    
+                    petalsContainer.appendChild(petal);
+                }
+                
+                // Crear centro de la flor
+                const flowerCenter = document.createElement('div');
+                flowerCenter.className = 'flower-center';
+                
+                // Añadir animación con retraso aleatorio
+                const delay = Math.random() * 2;
+                petalsContainer.style.animationDelay = `-${delay}s`;
+                flower.style.animationDelay = `-${delay}s`;
+                
+                // Ensamblar la flor
+                flower.appendChild(stem);
+                flower.appendChild(petalsContainer);
+                flower.appendChild(flowerCenter);
+                
+                // Añadir al jardín
+                garden.appendChild(flower);
+                
+                // Efecto de movimiento al crear la flor
+                flower.animate([
+                    { transform: `scale(0) rotate(0deg)` },
+                    { transform: `scale(${scale}) rotate(-5deg)` }
+                ], {
+                    duration: 1000,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+                
+                // Añadir un pequeño retraso entre la animación de cada pétalo
+                Array.from(petalsContainer.children).forEach((petal, index) => {
+                    petal.style.animationDelay = `${index * 0.1}s`;
+                });
+            }
+        });
+
+        const message = "Feliz día! ";
+        let letterIndex = 0;
+
+        function createLetterDrop() {
+            const letter = message[letterIndex % message.length];
+            
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.textContent = letter;
+            
+            // Posición horizontal aleatoria
+            drop.style.left = Math.random() * 100 + 'vw';
+            
+            // Variaciones visuales
+            drop.style.fontSize = (24 + Math.random() * 12) + 'px';
+            drop.style.animationDuration = (2 + Math.random() * 2) + 's';
+            drop.style.color = `hsl(${Math.random() * 60 + 30}, 70%, 50%)`;
+            
+            document.body.appendChild(drop);
+            
+            // Ciclo de letras
+            letterIndex++;
+            
+            // Eliminar después de la animación
+            setTimeout(() => {
+                drop.remove();
+            }, 3000);
+        }
+
+        // Iniciar la lluvia de letras
+        setInterval(createLetterDrop, 150);
+    </script>
+</body>
+</html>
