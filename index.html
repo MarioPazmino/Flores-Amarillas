@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jardín Animado</title>
+    <style>
+        :root {
+            --color-cielo: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            --color-petalos: #FFF9C4;
+            --color-tallo: #689F38;
+            --color-centro: #FFB300;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: var(--color-cielo);
+            height: 100vh;
+            position: relative;
+        }
+
+        .garden {
+            position: relative;
+            width: 100%;
+            height: 85%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* Base de césped */
+        .grass {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 15%;
+            background: linear-gradient(to top, #7CB342, #9CCC65);
+            box-shadow: 0 -4px 15px rgba(124, 179, 66, 0.3);
+        }
+
+        .flower {
+            position: absolute;
+            transform-origin: bottom center;
+            animation: sway 4s ease-in-out infinite alternate;
+            filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .flower:hover {
+            transform: scale(1.05) rotate(2deg);
+            z-index: 10;
+        }
+
+        .stem {
+            width: 10px;
+            height: 120px;
+            background: var(--color-tallo);
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            border-radius: 4px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flower-center {
+            width: 35px;
+            height: 35px;
+            background: var(--color-centro);
+            border-radius: 50%;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 
+                inset 0 0 12px rgba(0, 0, 0, 0.2),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .petals {
+            position: absolute;
+            top: -30px;
+            left: 300%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 90px;
+            z-index: 2;
+            animation: bloom 6s ease-in-out infinite alternate;
+        }
+
+        .petal {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: var(--color-petalos);
+            border-radius: 50% 30%;
+            transform-origin: center center;
+            box-shadow: 
+                1px 2px 4px rgba(0, 0, 0, 0.15),
+                inset 0 -2px 4px rgba(255, 235, 59, 0.3);
+        }
+
+        /* Posicionamiento de pétalos mejorado */
+        .petal:nth-child(odd) {
+            transform: rotate(22.5deg);
+            border-radius: 30% 50%;
+        }
+
+        .petal:nth-child(1) { transform: translate(30px, 0) rotate(0deg); }
+        .petal:nth-child(2) { transform: translate(21px, 21px) rotate(45deg); }
+        .petal:nth-child(3) { transform: translate(0, 30px) rotate(90deg); }
+        .petal:nth-child(4) { transform: translate(-21px, 21px) rotate(135deg); }
+        .petal:nth-child(5) { transform: translate(-30px, 0) rotate(180deg); }
+        .petal:nth-child(6) { transform: translate(-21px, -21px) rotate(225deg); }
+        .petal:nth-child(7) { transform: translate(0, -30px) rotate(270deg); }
+        .petal:nth-child(8) { transform: translate(21px, -21px) rotate(315deg); }
+
+        .leaf {
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            background: var(--color-tallo);
+            border-radius: 50% 20% 50% 30%;
+            transform: rotate(45deg);
+            top: 50px;
+            right: -20px;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.1),
+                1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaf:nth-child(2) {
+            transform: rotate(135deg);
+            left: -20px;
+            right: auto;
+            border-radius: 20% 50% 30% 50%;
+        }
+
+        @keyframes bloom {
+            0% { transform: translateX(-50%) scale(0.8) rotate(-5deg); }
+            50% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+            100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+        }
+
+        @keyframes sway {
+            0% { transform: rotate(-7deg); }
+            100% { transform: rotate(7deg); }
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 15px;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #689F38;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #558B2F;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Efecto de viento en el jardín */
+        @keyframes wind {
+            0%, 100% { transform: skewX(0deg); }
+            50% { transform: skewX(3deg); }
+        }
+
+        .garden {
+            animation: wind 8s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="garden">
+        <div class="grass"></div>
+        
+        <!-- Flores generadas dinámicamente -->
+        <div id="flowers-container"></div>
+    </div>
+
+    <div id="controls">
+        <button onclick="addFlower()">
+            🌸 Añadir Flor
+        </button>
+        <button onclick="removeFlower()">
+            🗑️ Quitar Flor
+        </button>
+        <button onclick="toggleAnimation()">
+            ⏸️ Pausar/Reanudar
+        </button>
+        <button onclick="changeWeather()">
+            🌤️ Cambiar Clima
+        </button>
+    </div>
+
+    <script>
+        let flowers = [];
+        let animationPaused = false;
+        let weatherMode = 'sunny';
+
+        // Crear flores iniciales
+        function createInitialFlowers() {
+            for (let i = 0; i < 8; i++) {
+                addFlower();
+            }
+        }
+
+        // Añadir una nueva flor
+        function addFlower() {
+            const container = document.getElementById('flowers-container');
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            
+            // Posición aleatoria
+            const x = Math.random() * 80 + 10; // 10% a 90% del ancho
+            const y = Math.random() * 20 + 10; // 10% a 30% desde abajo
+            
+            flower.style.left = x + '%';
+            flower.style.bottom = y + '%';
+            
+            // Tamaño aleatorio
+            const scale = Math.random() * 0.4 + 0.8; // 0.8 a 1.2
+            flower.style.transform = `scale(${scale})`;
+            
+            // Crear estructura de la flor
+            flower.innerHTML = `
+                <div class="stem"></div>
+                <div class="flower-center"></div>
+                <div class="petals">
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                </div>
+                <div class="leaf"></div>
+                <div class="leaf"></div>
+            `;
+            
+            container.appendChild(flower);
+            flowers.push(flower);
+            
+            // Efecto de aparición
+            flower.style.opacity = '0';
+            flower.style.transform += ' scale(0.5)';
+            setTimeout(() => {
+                flower.style.transition = 'all 0.8s ease-out';
+                flower.style.opacity = '1';
+                flower.style.transform = flower.style.transform.replace(' scale(0.5)', '');
+            }, 100);
+        }
+
+        // Quitar la última flor
+        function removeFlower() {
+            if (flowers.length > 0) {
+                const flower = flowers.pop();
+                flower.style.transition = 'all 0.5s ease-in';
+                flower.style.opacity = '0';
+                flower.style.transform += ' scale(0.3) rotate(180deg)';
+                setTimeout(() => {
+                    flower.remove();
+                }, 500);
+            }
+        }
+
+        // Pausar/Reanudar animaciones
+        function toggleAnimation() {
+            animationPaused = !animationPaused;
+            const garden = document.querySelector('.garden');
+            const allFlowers = document.querySelectorAll('.flower');
+            
+            if (animationPaused) {
+                garden.style.animationPlayState = 'paused';
+                allFlowers.forEach(flower => {
+                    flower.style.animationPlayState = 'paused';
+                });
+            } else {
+                garden.style.animationPlayState = 'running';
+                allFlowers.forEach(flower => {
+                    flower.style.animationPlayState = 'running';
+                });
+            }
+        }
+
+        // Cambiar clima
+        function changeWeather() {
+            const body = document.body;
+            const garden = document.querySelector('.garden');
+            
+            if (weatherMode === 'sunny') {
+                // Modo lluvioso
+                weatherMode = 'rainy';
+                body.style.background = 'linear-gradient(to bottom, #4A90E2, #7FB3D3)';
+                garden.style.filter = 'brightness(0.8) contrast(1.2)';
+                
+                // Efecto de lluvia
+                createRainEffect();
+            } else if (weatherMode === 'rainy') {
+                // Modo atardecer
+                weatherMode = 'sunset';
+                body.style.background = 'linear-gradient(to bottom, #FF6B6B, #FFE66D)';
+                garden.style.filter = 'brightness(1.1) saturate(1.3)';
+                removeRainEffect();
+            } else {
+                // Volver a soleado
+                weatherMode = 'sunny';
+                body.style.background = 'var(--color-cielo)';
+                garden.style.filter = 'none';
+                removeRainEffect();
+            }
+        }
+
+        // Crear efecto de lluvia
+        function createRainEffect() {
+            removeRainEffect(); // Limpiar lluvia anterior
+            
+            const rainContainer = document.createElement('div');
+            rainContainer.id = 'rain-container';
+            rainContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 50;
+            `;
+            
+            for (let i = 0; i < 100; i++) {
+                const drop = document.createElement('div');
+                drop.style.cssText = `
+                    position: absolute;
+                    width: 2px;
+                    height: 20px;
+                    background: linear-gradient(to bottom, transparent, #87CEEB);
+                    left: ${Math.random() * 100}%;
+                    animation: rain ${0.5 + Math.random() * 1}s linear infinite;
+                    animation-delay: ${Math.random() * 2}s;
+                `;
+                rainContainer.appendChild(drop);
+            }
+            
+            document.body.appendChild(rainContainer);
+            
+            // Añadir keyframes para la lluvia
+            if (!document.querySelector('#rain-keyframes')) {
+                const style = document.createElement('style');
+                style.id = 'rain-keyframes';
+                style.textContent = `
+                    @keyframes rain {
+                        0% { transform: translateY(-100px); opacity: 0; }
+                        10% { opacity: 1; }
+                        100% { transform: translateY(100vh); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Remover efecto de lluvia
+        function removeRainEffect() {
+            const rainContainer = document.getElementById('rain-container');
+            if (rainContainer) {
+                rainContainer.remove();
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            createInitialFlowers();
+            
+            // Efectos de hover mejorados
+            document.addEventListener('mousemove', function(e) {
+                const flowers = document.querySelectorAll('.flower');
+                flowers.forEach(flower => {
+                    const rect = flower.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const distance = Math.sqrt(
+                        Math.pow(e.clientX - centerX, 2) + 
+                        Math.pow(e.clientY - centerY, 2)
+                    );
+                    
+                    if (distance < 100) {
+                        flower.style.transform += ' scale(1.1)';
+                    } else {
+                        flower.style.transform = flower.style.transform.replace(' scale(1.1)', '');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
