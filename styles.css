@@ -278,7 +278,7 @@ body.night {
     width: 60px;
     height: 120px;
     bottom: 0;
-    animation: growSunflower 0.7s cubic-bezier(.68,-0.55,.27,1.55) 1;
+    animation: sunflowerGrowUp 1s cubic-bezier(.68,-0.55,.27,1.55) 1;
 }
 
 .night .sunflower {
@@ -415,6 +415,21 @@ body.night {
     100% { transform: scale(1); opacity: 1; }
 } 
 
+@keyframes sunflowerGrowUp {
+    0% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.7);
+    }
+    70% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 /* Estrellas */
 .stars {
     display: none;
@@ -444,4 +459,123 @@ body.night .stars {
 @keyframes twinkle {
     0% { opacity: 0.5; }
     100% { opacity: 1; }
+} 
+
+.plane {
+    position: absolute;
+    top: 90px;
+    left: -140px;
+    width: 120px;
+    height: 32px;
+    z-index: 5;
+    background: #f5f6fa;
+    border-radius: 18px 60px 30px 18px / 18px 30px 30px 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-bottom: 2px solid #c0c0c0;
+}
+
+/* Nariz */
+.plane .nose {
+    position: absolute;
+    left: -15px;
+    top: -2px;
+    width: 0;
+    height: 0;
+    border-left: 40px solid #b0c4de;
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    z-index: 3;
+    filter: drop-shadow(3px 0 10px #b0c4de44);
+    border-radius: 8px;
+    transform: rotate(25deg);
+    transform-origin: center;
+}
+
+/* Ventanas */
+.plane .window {
+    position: absolute;
+    top: 10px;
+    left: 32px;
+    width: 8px;
+    height: 8px;
+    background: #a3d8f4;
+    border-radius: 50%;
+    box-shadow: 14px 0 0 0 #a3d8f4, 28px 0 0 0 #a3d8f4, 42px 0 0 0 #a3d8f4, 56px 0 0 0 #a3d8f4;
+    z-index: 4;
+    border: 1px solid #b0c4de;
+}
+
+/* Ala principal */
+.plane .wing {
+    position: absolute;
+    left: 38px;
+    top: 26px;
+    width: 54px;
+    height: 14px;
+    background: #b0b8c1;
+    border-radius: 10px 30px 10px 30px;
+    transform: rotate(-12deg);
+    z-index: 2;
+    opacity: 0.85;
+    box-shadow: 0 2px 8px #b0b8c122;
+}
+
+/* Cola vertical */
+.plane .tail {
+    position: absolute;
+    right: 8px;
+    top: -14px;
+    width: 10px;
+    height: 28px;
+    background: #b0b8c1;
+    border-radius: 2px 6px 6px 2px;
+    z-index: 4;
+    opacity: 0.92;
+}
+
+/* Motor */
+.plane .engine {
+    position: absolute;
+    left: 60px;
+    top: 30px;
+    width: 16px;
+    height: 8px;
+    background: #888;
+    border-radius: 6px 10px 6px 10px;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+.plane .stabilizer {
+    position: absolute;
+    right: 2px;
+    top: 16px;
+    width: 18px;
+    height: 7px;
+    background: #b0b8c1;
+    border-radius: 2px 8px 8px 2px;
+    transform: rotate(-8deg);
+    z-index: 3;
+    opacity: 0.7;
+}
+
+@keyframes fly {
+    0% {
+        left: -140px;
+        top: 90px;
+    }
+    40% {
+        top: 75px;
+    }
+    60% {
+        top: 110px;
+    }
+    100% {
+        left: 100vw;
+        top: 90px;
+    }
+}
+
+.plane {
+    animation: fly 18s linear infinite;
 } 
