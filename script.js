@@ -1,6 +1,42 @@
 let animationPaused = false;
 let isNight = false;
 
+function setDayNightAndBanner() {
+    const now = new Date();
+    const hour = now.getHours();
+    let message = '';
+    // Día: 6 a 18, Noche: 18 a 6
+    if (hour >= 6 && hour < 12) {
+        isNight = false;
+        message = 'Buenos días Caro';
+    } else if (hour >= 12 && hour < 18) {
+        isNight = false;
+        message = 'Buenas tardes Caro';
+    } else {
+        isNight = true;
+        message = 'Buenas noches Caro';
+    }
+    document.body.classList.toggle('night', isNight);
+    // Cambiar texto del botón
+    const btn = document.getElementById('nightModeBtn');
+    if (btn) {
+        btn.innerHTML = isNight ? '☀️ Día' : '🌙 Noche';
+    }
+    // Generar estrellas si es noche
+    const starsContainer = document.querySelector('.stars');
+    if (starsContainer) {
+        starsContainer.innerHTML = '';
+        if (isNight) {
+            createStars(80, starsContainer);
+        }
+    }
+    // Cambiar mensaje del banner
+    const banner = document.querySelector('.banner');
+    if (banner) {
+        banner.textContent = message;
+    }
+}
+
 // Pausar/Reanudar animaciones
 function toggleAnimation() {
     animationPaused = !animationPaused;
@@ -14,7 +50,7 @@ function toggleAnimation() {
     });
 }
 
-// Alternar modo noche
+// Alternar modo noche manual
 function toggleNightMode() {
     isNight = !isNight;
     document.body.classList.toggle('night', isNight);
@@ -58,17 +94,14 @@ function createSunflower(x, y, forceToField = false) {
     }
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
-
     // Limitar a la parte verde (campo)
     const fieldTop = container.offsetHeight / 2; // 50% desde arriba
     if (y < fieldTop || forceToField) {
         y = fieldTop + (container.offsetHeight / 2) * 0.8 * Math.random();
     }
-
     // Posicionar el girasol usando left/top relativos al contenedor
     sunflower.style.left = `${x - 30}px`;
     sunflower.style.top = `${y - 60}px`;
-
     // Añadir tallo y hoja
     const stem = document.createElement('div');
     stem.className = 'stem';
@@ -76,11 +109,9 @@ function createSunflower(x, y, forceToField = false) {
     leaf.className = 'leaf';
     sunflower.appendChild(stem);
     sunflower.appendChild(leaf);
-
     // Animación de balanceo aleatoria
     const swayDuration = 3 + Math.random() * 2;
-    sunflower.style.animation = `growSunflower 0.7s cubic-bezier(.68,-0.55,.27,1.55) 1, sway ${swayDuration}s ease-in-out infinite ${Math.random()}s`;
-
+    sunflower.style.animation = `sunflowerGrowUp 1s cubic-bezier(.68,-0.55,.27,1.55) 1, sway ${swayDuration}s ease-in-out infinite ${Math.random()}s`;
     container.appendChild(sunflower);
 }
 
@@ -106,6 +137,7 @@ function createInitialSunflowers(count = 8) {
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
+    setDayNightAndBanner();
     // Verificar que el contenedor existe
     const container = document.querySelector('.sunflowers-container');
     if (!container) {
@@ -116,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         createInitialSunflowers(8);
     }, 200);
-
     // Permitir crear girasoles al hacer clic en el paisaje
     const landscape = document.body;
     landscape.addEventListener('click', function(e) {
