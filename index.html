@@ -3,29 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jardín Animado</title>
+    <title>Campo de Girasoles</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="garden">
-        <div class="grass"></div>
-        <!-- Flores generadas dinámicamente -->
-        <div id="flowers-container"></div>
+    <div class="sky">
+        <div class="sun"></div>
+        <div class="moon"></div>
+        <div class="stars"></div>
+        <div class="clouds">
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="cloud cloud3"></div>
+        </div>
     </div>
-    <div id="controls">
-        <button onclick="addFlower()">
-            🌸 Añadir Flor
+    
+    <div class="field">
+        <div class="grass"></div>
+    </div>
+
+    <!-- Sección de girasoles que se sobrepone en el centro -->
+    <div class="sunflowers-container"></div>
+
+    <div class="controls">
+        <button onclick="toggleNightMode()" class="btn" id="nightModeBtn">
+            🌙 Noche
         </button>
-        <button onclick="removeFlower()">
-            🗑️ Quitar Flor
-        </button>
-        <button onclick="toggleAnimation()">
+        <button onclick="toggleAnimation()" class="btn">
             ⏸️ Pausar/Reanudar
         </button>
-        <button onclick="changeWeather()">
-            🌤️ Cambiar Clima
-        </button>
     </div>
+
+    <div class="info">
+        <p>💡 Paisaje natural con nubes y sol</p>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html> 
