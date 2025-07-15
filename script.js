@@ -8,13 +8,13 @@ function setDayNightAndBanner() {
     // Día: 6 a 18, Noche: 18 a 6
     if (hour >= 6 && hour < 12) {
         isNight = false;
-        message = 'Buenos días Caro';
+        message = 'Buenos días Caro 🙃';
     } else if (hour >= 12 && hour < 18) {
         isNight = false;
-        message = 'Buenas tardes Caro';
-    } else {
+        message = 'Buenas tardes Caro 🙃';
+    } else {    
         isNight = true;
-        message = 'Buenas noches Caro';
+        message = 'Buenas noches Caro 🙃';
     }
     document.body.classList.toggle('night', isNight);
     // Cambiar texto del botón
