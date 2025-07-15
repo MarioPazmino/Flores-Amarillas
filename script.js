@@ -5,7 +5,6 @@ let isNight = false;
 function toggleAnimation() {
     animationPaused = !animationPaused;
     const elements = document.querySelectorAll('.cloud, .sun, .sunflower');
-    
     elements.forEach(element => {
         if (animationPaused) {
             element.classList.add('paused');
@@ -19,13 +18,11 @@ function toggleAnimation() {
 function toggleNightMode() {
     isNight = !isNight;
     document.body.classList.toggle('night', isNight);
-    
     // Cambiar texto del botón
     const btn = document.getElementById('nightModeBtn');
     if (btn) {
         btn.innerHTML = isNight ? '☀️ Día' : '🌙 Noche';
     }
-    
     // Generar estrellas si es noche
     const starsContainer = document.querySelector('.stars');
     if (starsContainer) {
@@ -39,10 +36,8 @@ function toggleNightMode() {
 // Crear estrellas aleatorias en el cielo
 function createStars(count, container) {
     if (!container) return;
-    
     const width = container.offsetWidth || window.innerWidth;
     const height = container.offsetHeight || window.innerHeight * 0.5;
-    
     for (let i = 0; i < count; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -61,7 +56,6 @@ function createSunflower(x, y, forceToField = false) {
         console.error('Contenedor de girasoles no encontrado');
         return;
     }
-    
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
 
@@ -97,7 +91,6 @@ function createInitialSunflowers(count = 8) {
         console.error('Contenedor de girasoles no encontrado');
         return;
     }
-    
     const rect = container.getBoundingClientRect();
     for (let i = 0; i < count; i++) {
         // Márgenes para que no salgan cortados
@@ -113,32 +106,26 @@ function createInitialSunflowers(count = 8) {
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado, inicializando...');
-    
     // Verificar que el contenedor existe
     const container = document.querySelector('.sunflowers-container');
     if (!container) {
         console.error('Error: No se encontró el contenedor de girasoles');
         return;
     }
-    
     // Crear 8 girasoles aleatorios al cargar
     setTimeout(() => {
-        console.log('Creando girasoles iniciales...');
         createInitialSunflowers(8);
     }, 200);
-    
+
     // Permitir crear girasoles al hacer clic en el paisaje
     const landscape = document.body;
     landscape.addEventListener('click', function(e) {
         // Evitar crear girasol si se hace clic en controles o info
         if (e.target.closest('.controls') || e.target.closest('.info')) return;
-        
         // Obtener posición relativa al viewport
         const rect = container.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
         // Si el clic es en el cielo, forzar a la parte verde
         const fieldTop = container.offsetHeight / 2;
         if (y < fieldTop) {
@@ -147,6 +134,4 @@ document.addEventListener('DOMContentLoaded', function() {
             createSunflower(x, y);
         }
     });
-    
-    console.log('Inicialización completada');
-}); 
+});
