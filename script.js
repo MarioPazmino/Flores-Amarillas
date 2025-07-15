@@ -85,7 +85,77 @@ function createStars(count, container) {
     }
 }
 
-// Crear girasol dinámicamente SOLO en la parte verde
+function createBeeForSunflower(sunflower) {
+    // Obtener la posición del girasol
+    const container = document.querySelector('.sunflowers-container');
+    const sunflowerRect = sunflower.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    // Crear la abeja
+    const bee = document.createElement('div');
+    bee.className = 'bee';
+    // Posicionar la abeja cerca del girasol (a la derecha y un poco arriba)
+    // Usar estilos left/top relativos al contenedor
+    const sunflowerLeft = parseFloat(sunflower.style.left || 0);
+    const sunflowerTop = parseFloat(sunflower.style.top || 0);
+    bee.style.left = (sunflowerLeft + 40 + Math.random() * 10) + 'px';
+    bee.style.top = (sunflowerTop - 10 + Math.random() * 10) + 'px';
+    // Estructura de la abeja
+    bee.innerHTML = `
+        <div class="bee-body"></div>
+        <div class="bee-head"></div>
+        <div class="bee-wing"></div>
+        <div class="bee-wing right"></div>
+    `;
+    container.appendChild(bee);
+}
+
+// Guardar referencias globales a las abejas y sus índices
+let globalBees = [];
+let globalBeeIndices = [];
+let globalBeeSpeeds = [];
+
+function createFlyingBees(numBees = 3) {
+    const container = document.querySelector('.sunflowers-container');
+    if (!container) return;
+    if (globalBees.length === numBees && document.querySelectorAll('.bee-global').length === numBees) return;
+    Array.from(document.querySelectorAll('.bee-global')).forEach(b => b.remove());
+    globalBees = [];
+    globalBeeIndices = [];
+    globalBeeSpeeds = [];
+    for (let i = 0; i < numBees; i++) {
+        let bee = document.createElement('div');
+        bee.className = 'bee bee-global';
+        bee.innerHTML = `
+            <div class="bee-body"></div>
+            <div class="bee-head"></div>
+            <div class="bee-wing"></div>
+            <div class="bee-wing right"></div>
+        `;
+        container.appendChild(bee);
+        globalBees.push(bee);
+        // Cada abeja empieza en un girasol diferente y con velocidad diferente
+        globalBeeIndices.push(i); // índice inicial diferente
+        globalBeeSpeeds.push(1000 + Math.random() * 800); // velocidad aleatoria entre 1s y 1.8s
+        setTimeout(() => moveBeeToNextSunflower(bee, i), i * 500);
+    }
+}
+
+function moveBeeToNextSunflower(bee, idx) {
+    const sunflowers = Array.from(document.querySelectorAll('.sunflower'));
+    if (sunflowers.length === 0) return;
+    let beeIdx = globalBeeIndices[globalBees.indexOf(bee)] || 0;
+    const nextIdx = beeIdx % sunflowers.length;
+    const sunflower = sunflowers[nextIdx];
+    const left = parseFloat(sunflower.style.left || 0) + 40;
+    const top = parseFloat(sunflower.style.top || 0) - 10;
+    bee.style.transition = `left ${globalBeeSpeeds[globalBees.indexOf(bee)]}ms cubic-bezier(.68,-0.55,.27,1.55), top ${globalBeeSpeeds[globalBees.indexOf(bee)]}ms cubic-bezier(.68,-0.55,.27,1.55)`;
+    bee.style.left = left + 'px';
+    bee.style.top = top + 'px';
+    globalBeeIndices[globalBees.indexOf(bee)] = nextIdx + 1;
+    setTimeout(() => moveBeeToNextSunflower(bee, nextIdx + 1), globalBeeSpeeds[globalBees.indexOf(bee)] + 200);
+}
+
+// Modificar createSunflower para NO crear abejas individuales
 function createSunflower(x, y, forceToField = false) {
     const container = document.querySelector('.sunflowers-container');
     if (!container) {
@@ -147,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Crear 8 girasoles aleatorios al cargar
     setTimeout(() => {
         createInitialSunflowers(8);
+        setTimeout(() => createFlyingBees(3), 400);
     }, 200);
     // Permitir crear girasoles al hacer clic en el paisaje
     const landscape = document.body;
@@ -164,5 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             createSunflower(x, y);
         }
+        // No recrear abejas, solo dejar que sigan volando
     });
 });

@@ -665,3 +665,61 @@ body.night .stars {
         top: 110px;
     }
 } 
+
+.bee {
+    position: absolute;
+    width: 28px;
+    height: 18px;
+    z-index: 10;
+    pointer-events: none;
+    /* Animación de vuelo */
+    animation: bee-fly 2.5s ease-in-out infinite alternate;
+}
+
+.bee-body {
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    width: 12px;
+    height: 8px;
+    background: linear-gradient(90deg, #ffe066 60%, #222 60%, #ffe066 100%);
+    border-radius: 8px 8px 8px 8px;
+    border: 1.5px solid #222;
+    z-index: 2;
+}
+
+.bee-head {
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    width: 7px;
+    height: 7px;
+    background: #222;
+    border-radius: 50%;
+    z-index: 3;
+}
+
+.bee-wing {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    width: 10px;
+    height: 10px;
+    background: #e0f7fa;
+    border-radius: 50%;
+    opacity: 0.7;
+    z-index: 1;
+    transform: rotate(-20deg);
+}
+.bee-wing.right {
+    left: 15px;
+    top: 2px;
+    transform: rotate(20deg);
+}
+
+@keyframes bee-fly {
+    0% { transform: translate(-10px, -10px) scale(1) rotate(-10deg); }
+    30% { transform: translate(10px, 0px) scale(1.05) rotate(10deg); }
+    60% { transform: translate(-5px, 10px) scale(0.98) rotate(-8deg); }
+    100% { transform: translate(8px, -5px) scale(1) rotate(8deg); }
+} 
