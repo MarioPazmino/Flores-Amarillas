@@ -1,0 +1,193 @@
+:root {
+    --color-cielo: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+    --color-petalos: #FFF9C4;
+    --color-tallo: #689F38;
+    --color-centro: #FFB300;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: var(--color-cielo);
+    height: 100vh;
+    position: relative;
+}
+
+.garden {
+    position: relative;
+    width: 100%;
+    height: 85%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+/* Base de césped */
+.grass {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 15%;
+    background: linear-gradient(to top, #7CB342, #9CCC65);
+    box-shadow: 0 -4px 15px rgba(124, 179, 66, 0.3);
+}
+
+.flower {
+    position: absolute;
+    transform-origin: bottom center;
+    animation: sway 4s ease-in-out infinite alternate;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.flower:hover {
+    transform: scale(1.05) rotate(2deg);
+    z-index: 10;
+}
+
+.stem {
+    width: 10px;
+    height: 120px;
+    background: var(--color-tallo);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flower-center {
+    width: 35px;
+    height: 35px;
+    background: var(--color-centro);
+    border-radius: 50%;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    box-shadow: 
+        inset 0 0 12px rgba(0, 0, 0, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.petals {
+    position: absolute;
+    top: -30px;
+    left: 300%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 90px;
+    z-index: 2;
+    animation: bloom 6s ease-in-out infinite alternate;
+}
+
+.petal {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: var(--color-petalos);
+    border-radius: 50% 30%;
+    transform-origin: center center;
+    box-shadow: 
+        1px 2px 4px rgba(0, 0, 0, 0.15),
+        inset 0 -2px 4px rgba(255, 235, 59, 0.3);
+}
+
+/* Posicionamiento de pétalos mejorado */
+.petal:nth-child(odd) {
+    transform: rotate(22.5deg);
+    border-radius: 30% 50%;
+}
+
+.petal:nth-child(1) { transform: translate(30px, 0) rotate(0deg); }
+.petal:nth-child(2) { transform: translate(21px, 21px) rotate(45deg); }
+.petal:nth-child(3) { transform: translate(0, 30px) rotate(90deg); }
+.petal:nth-child(4) { transform: translate(-21px, 21px) rotate(135deg); }
+.petal:nth-child(5) { transform: translate(-30px, 0) rotate(180deg); }
+.petal:nth-child(6) { transform: translate(-21px, -21px) rotate(225deg); }
+.petal:nth-child(7) { transform: translate(0, -30px) rotate(270deg); }
+.petal:nth-child(8) { transform: translate(21px, -21px) rotate(315deg); }
+
+.leaf {
+    position: absolute;
+    width: 35px;
+    height: 25px;
+    background: var(--color-tallo);
+    border-radius: 50% 20% 50% 30%;
+    transform: rotate(45deg);
+    top: 50px;
+    right: -20px;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.1),
+        1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.leaf:nth-child(2) {
+    transform: rotate(135deg);
+    left: -20px;
+    right: auto;
+    border-radius: 20% 50% 30% 50%;
+}
+
+@keyframes bloom {
+    0% { transform: translateX(-50%) scale(0.8) rotate(-5deg); }
+    50% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+    100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+}
+
+@keyframes sway {
+    0% { transform: rotate(-7deg); }
+    100% { transform: rotate(7deg); }
+}
+
+#controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 20px;
+    border-radius: 15px;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #689F38;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background: #558B2F;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Efecto de viento en el jardín */
+@keyframes wind {
+    0%, 100% { transform: skewX(0deg); }
+    50% { transform: skewX(3deg); }
+}
+
+.garden {
+    animation: wind 8s ease-in-out infinite;
+} 
