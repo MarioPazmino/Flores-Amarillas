@@ -579,3 +579,89 @@ body.night .stars {
 .plane {
     animation: fly 18s linear infinite;
 } 
+
+.plane-banner-group {
+    position: absolute;
+    top: 90px;
+    left: -320px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    animation: fly-group 18s linear infinite;
+}
+
+@keyframes fly-group {
+    0% {
+        left: -320px;
+        top: 90px;
+    }
+    40% {
+        top: 75px;
+    }
+    60% {
+        top: 110px;
+    }
+    100% {
+        left: 100vw;
+        top: 90px;
+    }
+}
+
+.plane {
+    position: relative;
+    left: 0;
+    top: 0;
+    animation: none;
+}
+
+.banner {
+    position: relative;
+    left: 0;
+    top: 0;
+    min-width: 220px;
+    height: 38px;
+    background: #fffbe6;
+    color: #333;
+    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 18px 8px 8px 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e0c96b;
+    z-index: 4;
+    padding: 0 24px;
+    letter-spacing: 1px;
+    margin-right: 8px;
+    animation: none;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    right: -18px;
+    top: 16px;
+    width: 18px;
+    height: 2px;
+    background: #b0b8c1;
+    z-index: 5;
+}
+
+@keyframes fly-banner {
+    0% {
+        left: -320px;
+        top: 110px;
+    }
+    40% {
+        top: 95px;
+    }
+    60% {
+        top: 130px;
+    }
+    100% {
+        left: calc(100vw - 100px);
+        top: 110px;
+    }
+} 
